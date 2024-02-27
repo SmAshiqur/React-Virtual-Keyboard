@@ -20,7 +20,7 @@ const CustomKeyboard = () => {
   const onKeyPress = (button) => {
     if (button === '{enter}') {
       console.log('CUSTOM AMOUNT:', input);
-      setInput('');
+      // setInput('');
       setNumericKeyboardOpen(false);
     }
   };
@@ -28,7 +28,7 @@ const CustomKeyboard = () => {
   const onEmailKeyPress = (button) => {
     if (button === '{enter}') {
       console.log('EMAIL:', emailInput);
-      setEmailInput('');
+      // setEmailInput('');
       setEmailKeyboardOpen(false);
     } else if (button === '{shift}') {
       // Set the shiftPressed state to true when the shift button is pressed
