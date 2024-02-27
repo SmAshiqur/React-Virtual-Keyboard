@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 
@@ -8,15 +8,6 @@ const CustomKeyboard = () => {
   const [numericKeyboardOpen, setNumericKeyboardOpen] = useState(false);
   const [emailKeyboardOpen, setEmailKeyboardOpen] = useState(false);
   const [shiftPressed, setShiftPressed] = useState(false);
-  const keyboardRef = useRef();
-
-  const inputRef = useRef(null);
-  const emailInputRef = useRef(null);
-
-  useEffect(() => {
-    // Focus on the input field when the component mounts
-    inputRef.current.focus();
-  }, []);
 
   const onChange = (input) => {
     setInput(input);
@@ -40,15 +31,12 @@ const CustomKeyboard = () => {
       setEmailInput('');
       setEmailKeyboardOpen(false);
     } else if (button === '{shift}') {
-      // Toggle the shiftPressed state
-      setShiftPressed(!shiftPressed);
-
-      // Switch to the shift layout if shift is pressed
-      if (shiftPressed) {
-        keyboardRef.current.keyboard.setOptions({ layoutName: 'default' });
-      } else {
-        keyboardRef.current.keyboard.setOptions({ layoutName: 'shift' });
-      }
+      // Set the shiftPressed state to true when the shift button is pressed
+      setShiftPressed(true);
+    } else if (shiftPressed) {
+      // If shift is pressed, add the shifted character
+      setEmailInput(emailInput + button.toUpperCase());
+      setShiftPressed(false); // Reset the shiftPressed state after adding the shifted character
     } else {
       // Otherwise, add the regular character
       setEmailInput(emailInput + button);
@@ -69,6 +57,7 @@ const CustomKeyboard = () => {
       '{accept} {enter}'
     ],
     shift: [
+      'google.com yahoo.com hotmail.com',
       '~ ! @ # $ % ^ & * ( ) _ +',
       '1 2 3 4 5 6 7 8 9 0',
       'Q W E R T Y U I O P',
@@ -90,16 +79,15 @@ const CustomKeyboard = () => {
     <>
       <div>
         <input
-          ref={inputRef}
           type="number"
           value={input}
           onChange={(e) => onChange(e.target.value)}
           placeholder="$Custom Amount..."
           onFocus={() => onFocus('numeric')}
+          readOnly // Add the readonly attribute to disable the default keyboard
         />
         {numericKeyboardOpen && (
           <Keyboard
-            ref={keyboardRef}
             onChange={onChange}
             onKeyPress={onKeyPress}
             layout={numericLayout}
@@ -108,16 +96,15 @@ const CustomKeyboard = () => {
       </div>
       <div>
         <input
-          ref={emailInputRef}
           type="email"
           value={emailInput}
           onChange={(e) => onEmailChange(e.target.value)}
           placeholder="Email Address..."
           onFocus={() => onFocus('email')}
+          readOnly // Add the readonly attribute to disable the default keyboard
         />
         {emailKeyboardOpen && (
           <Keyboard
-            ref={keyboardRef}
             onChange={onEmailChange}
             onKeyPress={onEmailKeyPress}
             layout={emailLayout}
